@@ -5,7 +5,7 @@ import java.util.Stack;
 public class Main {
 	public static void main(String[] args) {
 		
-	//Données de test
+		//Donnees de test
 		Block a=new Block('a');
 		Block b=new Block('b');
 		Block c=new Block('c');
@@ -30,19 +30,6 @@ public class Main {
 			
 		 bo.put(sj,si);
 		
-		for(int l=0;l<4;l++){
-			System.out.print("__");
-			for(int t=0;t<bo.liststackblock.get(l).size();t++){
-				
-				System.out.print("|");
-				System.out.print(bo.liststackblock.get(l).get(t).getValue());
-				System.out.print("|");
-				
-			}
-			System.out.print("__");
-			//System.out.println("__");
-		}
-		
-		//System.out.print(bo.clear(e));
+		bo.printTable();
 	}
 }

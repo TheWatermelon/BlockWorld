@@ -11,6 +11,10 @@ public class BlockWorld {
 	public BlockWorld() {
 		// TODO Auto-generated constructor stub
 		liststackblock=new ArrayList<>();	 
+		addStack(new Stack());
+		addStack(new Stack());
+		addStack(new Stack());
+		addStack(new Stack());
 	}
 	public void addStack( Stack s){
 
@@ -78,6 +82,16 @@ public class BlockWorld {
 		return this;
 	}
 
-
+	public void printTable() {
+		for(int l=0;l<4;l++){
+			System.out.print("__");
+			for(int t=0;t<liststackblock.get(l).size();t++){
+				System.out.print("|");
+				System.out.print(liststackblock.get(l).get(t).getValue());
+				System.out.print("|");
+			}
+			System.out.print("__");
+		}
+	}
 
 }
