@@ -30,9 +30,18 @@ public class Main {
 		bo.addStack(sh);
 		bo.addStack(si);
 		bo.addStack(s);
-			
-		 bo.put(sj,si);
+		bo.put(sj,si);
 		
+		BlockWorld[] successeurs = bo.next();
+	
 		bo.printTable();
+		System.out.println("Etat initial");
+	
+		for(int i=0; i<successeurs.length; i++) {
+			System.out.println();
+			successeurs[i].printTable();
+			System.out.println("Etat successeur "+(i+1));
+		}
+		
 	}
 }
