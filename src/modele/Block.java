@@ -1,4 +1,4 @@
-package vue;
+package modele;
 
 public class Block {
 	

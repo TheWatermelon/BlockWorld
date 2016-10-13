@@ -1,7 +1,9 @@
-package vue;
+package modele;
 
 import java.util.ArrayList;
 import java.util.Stack;
+
+import modele.Block;
 
 public class BlockWorld {
 
@@ -84,24 +86,28 @@ public class BlockWorld {
 				maxHeight=liststackblock.get(i).size();
 			}
 		}
+		maxHeight*=2;
 		String[] blocks = new String[maxHeight];
 		// Premier sol
 		for(int i=0; i<maxHeight; i++) {
 			blocks[i]="   ";
 		}
 		// Stockage des blocks dans le tableau
-		for(int i=0; i<maxHeight; i++) {
+		for(int i=0; i<maxHeight; i=i+2) {
 			for(int j=0; j<4; j++) {
-				if(i<liststackblock.get(j).size()) {
-					blocks[i]+="|"+liststackblock.get(j).get(i).getValue()+"|";
+				if(i/2<liststackblock.get(j).size()) {
+					blocks[i+1]+="+-+";
+					blocks[i]+="|"+liststackblock.get(j).get(i/2).getValue()+"|";
 				} else {
 					blocks[i]+="   ";
+					blocks[i+1]+="   ";
 				}
 				// Espace entre les blocks
 				blocks[i]+="   ";
+				blocks[i+1]+="   ";
 			}
 		}
-		for(int i=3; i>=0; i--) {
+		for(int i=maxHeight-1; i>=0; i--) {
 			System.out.println(blocks[i]);
 		}
 		System.out.println("___+-+___+-+___+-+___+-+___");
