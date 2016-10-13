@@ -14,13 +14,13 @@ public class Main {
 		Block f=new Block('f');
 		Block g=new Block('g');
 		Block h=new Block('h');
-		Stack s= new Stack<>();
+		Stack<Block> s= new Stack<>();
 		s.add(a);s.add(b);
-		Stack si= new Stack<>();
+		Stack<Block> si= new Stack<>();
 		si.add(c);si.add(d);
-		Stack sh= new Stack<>();
+		Stack<Block> sh= new Stack<>();
 		sh.add(e);sh.add(f);
-		Stack sj= new Stack<>();
+		Stack<Block> sj= new Stack<>();
 		sj.add(g);sj.add(h);
 		BlockWorld bo=new BlockWorld();
 		bo.addStack(sj);

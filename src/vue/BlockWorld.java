@@ -1,7 +1,6 @@
 package vue;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class BlockWorld {
@@ -10,19 +9,12 @@ public class BlockWorld {
 
 	public BlockWorld() {
 		// TODO Auto-generated constructor stub
-		liststackblock=new ArrayList<>();	 
-		addStack(new Stack());
-		addStack(new Stack());
-		addStack(new Stack());
-		addStack(new Stack());
+		liststackblock=new ArrayList<>();
 	}
-	public void addStack( Stack s){
-
+	public void addStack( Stack<Block> s){
 		liststackblock.add(s);
-
 	}
-	public List getListStack(){
-
+	public ArrayList<Stack<Block>> getListStack(){
 		return liststackblock;
 	}
 
@@ -49,40 +41,30 @@ public class BlockWorld {
 							b=true;
 						} 
 					}
-
 				}
 			}
 		}
 		return b;	
-
 	}
 
-	public BlockWorld put(Stack x,Stack y){
-		boolean insurance=false;
-
-		for(Stack r: liststackblock)
+	public BlockWorld put(Stack<Block> x,Stack<Block> y){
+		//boolean insurance=false;
+		for(Stack<Block> r: liststackblock)
 		{
 			if(r.equals(x)){
-
-				for(Stack ru: liststackblock){
+				for(Stack<Block> ru: liststackblock){
 					if(ru.equals(y)){
-
 						for(int i=0;i<r.size();i++){
-
 							liststackblock.get(liststackblock.indexOf(y)).add(liststackblock.get(liststackblock.indexOf(x)).get(i));
 						}
-
-
-
 					}
 				}
 			}
 		}
-
 		return this;
 	}
 
-	public void printTable() {
+	public void printInLineTable() {
 		for(int l=0;l<4;l++){
 			System.out.print("__");
 			for(int t=0;t<liststackblock.get(l).size();t++){
@@ -93,5 +75,35 @@ public class BlockWorld {
 			System.out.print("__");
 		}
 	}
-
+	
+	public void printTable() {
+		// Recuperation de la hauteur maximum
+		int maxHeight=0;
+		for(int i=0; i<4; i++) {
+			if(liststackblock.get(i).size()>maxHeight) {
+				maxHeight=liststackblock.get(i).size();
+			}
+		}
+		String[] blocks = new String[maxHeight];
+		// Premier sol
+		for(int i=0; i<maxHeight; i++) {
+			blocks[i]="   ";
+		}
+		// Stockage des blocks dans le tableau
+		for(int i=0; i<maxHeight; i++) {
+			for(int j=0; j<4; j++) {
+				if(i<liststackblock.get(j).size()) {
+					blocks[i]+="|"+liststackblock.get(j).get(i).getValue()+"|";
+				} else {
+					blocks[i]+="   ";
+				}
+				// Espace entre les blocks
+				blocks[i]+="   ";
+			}
+		}
+		for(int i=3; i>=0; i--) {
+			System.out.println(blocks[i]);
+		}
+		System.out.println("___+-+___+-+___+-+___+-+___");
+	}
 }
