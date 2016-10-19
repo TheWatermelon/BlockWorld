@@ -2,6 +2,7 @@ package vue;
 
 import java.util.Stack;
 
+import modele.Astar;
 import modele.Block;
 import modele.BlockWorld;
 
@@ -30,18 +31,32 @@ public class Main {
 		bo.addStack(sh);
 		bo.addStack(si);
 		bo.addStack(s);
-		bo.put(sj,si);
 		
-		BlockWorld[] successeurs = bo.next();
+		/////
+		BlockWorld box=new BlockWorld();
+		box.addStack(sh);
+		 
+		box.addStack(s);
+		box.addStack(si);
+		box.addStack(sj);
+		Astar su=new Astar();
+		
+		System.out.println(su.h(bo, box));
+		
+		//bo.put(sj,si);
+		
+		//BlockWorld[] successeurs = bo.next();
 	
 		bo.printTable();
-		System.out.println("Etat initial");
-	
+		box.printTable();
+		//System.out.println("Etat initial");
+		/*
 		for(int i=0; i<successeurs.length; i++) {
 			System.out.println();
 			successeurs[i].printTable();
 			System.out.println("Etat successeur "+(i+1));
 		}
+		*/
 		
 	}
 }
