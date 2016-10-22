@@ -6,51 +6,47 @@ import java.util.Stack;
 import modele.Block;
 
 public class BlockWorld {
-
-	ArrayList<Stack<Block>> liststackblock;
+	ArrayList<Stack<Block>> table;
 
 	public BlockWorld() {
-		liststackblock=new ArrayList<>();
+		table=new ArrayList<>();
 	}
+
 	public void addStack( Stack<Block> s){
-		liststackblock.add(s);
+		table.add(s);
 	}
-	public ArrayList<Stack<Block>> getListStack(){
-		return liststackblock;
+	
+	public ArrayList<Stack<Block>> getTable(){
+		return table;
 	}
 
 	public boolean clear(Block block){
 		boolean b=false;
 		for(int i=0;i<4;i++){
-			for(int j=0;j<liststackblock.get(i).size();j++){
-				if(liststackblock.get(i).get(0)==block){
-					b=true;
-				}
+			if(table.get(i).get(0)==block){
+				b=true;
 			}
 		}
-		return b;	 
+		return b;
 	}
 
 	public boolean on(Block b1,Block b2){
-
-		boolean b=false;
 		for(int i=0;i<4;i++){
-			for(int j=0;j<liststackblock.get(i).size();j++){
-				if(liststackblock.get(i).get(j)==b2){
+			for(int j=0;j<table.get(i).size();j++){
+				if(table.get(i).get(j)==b2){
 					if(j>0){
-						if(liststackblock.get(i).get(j-1)==b1){
-							b=true;
+						if(table.get(i).get(j-1)==b1){
+							return true;
 						} 
 					}
 				}
 			}
 		}
-		return b;	
+		return false;
 	}
 
 	public BlockWorld put(Stack<Block> x,Stack<Block> y){
-		//boolean insurance=false;
-		liststackblock.get(liststackblock.indexOf(y)).push(liststackblock.get(liststackblock.indexOf(x)).pop());
+		table.get(table.indexOf(y)).push(table.get(table.indexOf(x)).pop());
 		return this;
 	}
 	
@@ -58,8 +54,8 @@ public class BlockWorld {
 		BlockWorld copy = new BlockWorld();
 		for(int i=0; i<4; i++) {
 			Stack<Block> s = new Stack<Block>();
-			for(int j=0; j<this.liststackblock.get(i).size(); j++) {
-				s.push(this.liststackblock.get(i).get(j));
+			for(int j=0; j<this.table.get(i).size(); j++) {
+				s.push(this.table.get(i).get(j));
 			}
 			copy.addStack(s);
 		}
@@ -71,7 +67,7 @@ public class BlockWorld {
 		int nbSuccesseurs=0;
 		int[] pilesSource = new int[4];
 		for(int i=0; i<4; i++) {
-			if(this.liststackblock.get(i).size()!=0) {
+			if(this.table.get(i).size()!=0) {
 				nbSuccesseurs+=3;
 				pilesSource[i]=1;
 			}
@@ -89,8 +85,8 @@ public class BlockWorld {
 			if(pilesSource[i]==1) {	// Si la pile d'origine est une pile source d'etats successeurs
 				for(int j=0; j<4; j++) {	// Pour chaque pile de destination
 					if(i==j) { continue; }	// On passe le deplacement d'un block de sa pile vers sa pile
-					Stack<Block> sOrig = this.liststackblock.get(i);	// On prend la pile source
-					Stack<Block> sDest = this.liststackblock.get(j);	// On prend la pile destination
+					Stack<Block> sOrig = this.table.get(i);	// On prend la pile source
+					Stack<Block> sDest = this.table.get(j);	// On prend la pile destination
 					successeurs[etatSuccesseur++]=(put(sOrig, sDest)).copy();	// Ajout de l'etat successeur au tableau
 					put(sDest, sOrig);	// Retour a l'etat initial
 				}
@@ -102,9 +98,9 @@ public class BlockWorld {
 	public void printInLineTable() {
 		for(int l=0;l<4;l++){
 			System.out.print("__");
-			for(int t=0;t<liststackblock.get(l).size();t++){
+			for(int t=0;t<table.get(l).size();t++){
 				System.out.print("|");
-				System.out.print(liststackblock.get(l).get(t).getValue());
+				System.out.print(table.get(l).get(t).getValue());
 				System.out.print("|");
 			}
 			System.out.print("__");
@@ -115,8 +111,8 @@ public class BlockWorld {
 		// Recuperation de la hauteur maximum
 		int maxHeight=0;
 		for(int i=0; i<4; i++) {
-			if(liststackblock.get(i).size()>maxHeight) {
-				maxHeight=liststackblock.get(i).size();
+			if(table.get(i).size()>maxHeight) {
+				maxHeight=table.get(i).size();
 			}
 		}
 		maxHeight*=2;
@@ -128,12 +124,12 @@ public class BlockWorld {
 		// Stockage des blocks dans le tableau
 		for(int i=0; i<maxHeight; i=i+2) {
 			for(int j=0; j<4; j++) {
-				if(i/2<liststackblock.get(j).size()) {
+				if(i/2<table.get(j).size()) {
 					blocks[i+1]+="+-+";
-					blocks[i]+="|"+liststackblock.get(j).get(i/2).getValue()+"|";
+					blocks[i]+="|"+table.get(j).get(i/2).getValue()+"|";
 				} else {
-					blocks[i]+="   ";
 					blocks[i+1]+="   ";
+					blocks[i]+="   ";
 				}
 				// Espace entre les blocks
 				blocks[i]+="   ";
@@ -143,20 +139,12 @@ public class BlockWorld {
 		for(int i=maxHeight-1; i>=0; i--) {
 			System.out.println(blocks[i]);
 		}
-		String lastLine="";
-		lastLine+="___";
-		if(this.liststackblock.get(0).size()==0) { lastLine+="___"; }
-		else {	lastLine+="+-+"; }
-		lastLine+="___";
-		if(this.liststackblock.get(1).size()==0) { lastLine+="___"; }
-		else {	lastLine+="+-+"; }
-		lastLine+="___";
-		if(this.liststackblock.get(2).size()==0) { lastLine+="___"; }
-		else {	lastLine+="+-+"; }
-		lastLine+="___";
-		if(this.liststackblock.get(3).size()==0) { lastLine+="___"; }
-		else {	lastLine+="+-+"; }
-		lastLine+="___";
+		String lastLine="___";
+		for(int i=0; i<4; i++) {
+			if(this.table.get(i).size()==0) { lastLine+="___"; }
+			else {	lastLine+="+-+"; }
+			lastLine+="___";
+		}
 		System.out.println(lastLine);
 	}
 }
