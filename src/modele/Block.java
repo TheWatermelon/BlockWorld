@@ -12,5 +12,7 @@ public class Block {
     	 return value;
      }
      
-     
+     public boolean isEqualTo(Block b) {
+    	 return this.value==b.getValue();
+     }
 }
