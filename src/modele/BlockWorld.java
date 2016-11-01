@@ -31,6 +31,16 @@ public class BlockWorld {
 		return table;
 	}
 
+	public int getBlocksCount() {
+		int blocks=0;
+
+		for(int i=0; i<table.size(); i++) {
+			blocks+=table.get(i).size();
+		}
+
+		return blocks;
+	}
+
 	/**
 	 * clear : verifie que block est le block au dessus de la pile
 	 * @param block : le block a verifier
@@ -46,20 +56,37 @@ public class BlockWorld {
 	}
 
 	/**
+	 * up : renvoie le block au-deesus de celui passé en argument
+	 * @param block : le block au-dessous
+	 * @return le block au-dessus de celui passé en paramètre
+	 */
+	public Block up(Block block) {
+		// Verifie que le block est sur la table
+		int i;
+		boolean onTable=false;
+		for(i=0; i<table.size(); i++) {
+			if(table.get(i).indexOf(block)!=-1) { onTable = true; break; }
+		}
+		if(!onTable) { return null; }
+		// Verifie que le block n'est pas le dernier
+		if(table.get(i).indexOf(block)==table.get(i).size()-1) { return null; }
+
+		return table.get(i).get(table.get(i).indexOf(block)+1);
+	}
+
+	/**
 	 * on : verifie que b1 est au-dessus de b2
-	 * @param b1 : le prelier block
+	 * @param b1 : le premier block
 	 * @param b2 : le deuxieme block
 	 * @return vrai si b1 est au-dessus de b2, faux sinon
 	 */
 	public boolean on(Block b1,Block b2){
-		for(int i=0;i<table.size();i++){
-			for(int j=0;j<table.get(i).size();j++){
-				if(table.get(i).get(j).isEqualTo(b2)){
-					if(j>0){
-						if(table.get(i).get(j-1).isEqualTo(b1)){
-							return true;
-						} 
-					}
+		for(int i=0;i<table.size();i++){	// pour chaque pile
+			if(table.get(i).indexOf(b2)!=-1) {	// cette pile contient le bloc b2
+				if(table.get(i).indexOf(b1)==(table.get(i).indexOf(b2)+1)) {	// si b1 est au-dessus de b2
+					return true;
+				} else {
+					return false;
 				}
 			}
 		}
@@ -94,7 +121,7 @@ public class BlockWorld {
 	}
 	
 	/**
-	 * isEqualTo : fonction d'egalite entre BlockWorld
+	 * isEqualTo : fonction d'egalite entre BlockWorld. INVALIDE
 	 * @param bw : le BlockWorld a comparer
 	 * @return vrai si bw est egal au BlockWorld appelant, faux sinon
 	 */
@@ -135,14 +162,15 @@ public class BlockWorld {
 		}
 		// Remplissage du tableau des etats successeurs
 		int etatSuccesseur=0;
+		BlockWorld copie;
 		for(int i=0; i<this.table.size(); i++) {	// Pour chaque pile d'origine
 			if(pilesSource[i]==1) {	// Si la pile d'origine est une pile source d'etats successeurs
 				for(int j=0; j<this.table.size(); j++) {	// Pour chaque pile de destination
 					if(i==j) { continue; }	// On passe le deplacement d'un block de sa pile vers sa pile
 					Stack<Block> sOrig = this.table.get(i);	// On prend la pile source
 					Stack<Block> sDest = this.table.get(j);	// On prend la pile destination
-					successeurs[etatSuccesseur++]=(put(sOrig, sDest)).copy();	// Ajout de l'etat successeur au tableau
-					put(sDest, sOrig);	// Retour a l'etat initial
+					copie=copy();
+					successeurs[etatSuccesseur++]=copie.put(sOrig, sDest);	// Ajout de l'etat successeur au tableau
 				}
 			}
 		}
