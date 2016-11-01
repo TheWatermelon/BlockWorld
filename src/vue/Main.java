@@ -1,6 +1,7 @@
 package vue;
 
 import java.util.Stack;
+import java.io.*;
 
 import modele.Astar;
 import modele.Block;
@@ -53,6 +54,7 @@ public class Main {
 		box.addStack(s0);
 		box.addStack(s0);
 		Astar su=new Astar(bo, box);
+		BlockWorld current;
 	
 		bo.printTable();
 		System.out.println("Etat initial");
@@ -70,8 +72,14 @@ public class Main {
 		}
 		*/
 		
-		su.algorithm().printTable();
-		System.out.println("Etat conseil");
+		do {
+			current=su.algorithm();
+			current.printTable();
+			try {
+				System.out.println("Press enter");
+				System.in.read();
+			} catch(IOException exception) {}
+		} while(!current.isEqualTo(box));
 		
 	}
 }
