@@ -16,7 +16,14 @@ public class Astar {
 	public Astar(BlockWorld init, BlockWorld term) {
 		this.first = init;
 		this.last = term;
-		this.closed = new ArrayList<BlockWorld>();
+	}
+
+	public void setFirst(BlockWorld bw) {
+		this.first = bw;
+	}
+
+	public void setLast(BlockWorld bw) {
+		this.last = bw;
 	}
 	
 	/**
@@ -24,13 +31,13 @@ public class Astar {
 	 */
 	public BlockWorld algorithm() {
 		// Initialisation
-		ArrayList<Integer> distance = new ArrayList<Integer>();
-		int currentDistance;
 		this.open = new ArrayList<BlockWorld>();
 		this.open.add(this.first);
-		currentDistance = 0;
+		this.closed = new ArrayList<BlockWorld>();
+		ArrayList<Integer> distance = new ArrayList<Integer>();
+		int currentDistance=0;
 		distance.add(new Integer(currentDistance));
-		int h = h(this.first, this.last);
+		int f = h(this.first, this.last);
 		BlockWorld current = this.first;
 		BlockWorld conseil = current;
 		
@@ -38,13 +45,13 @@ public class Astar {
 		while(this.open.size()!=0) {
 			//current.printTable();
 			// x <- arg min(xEO)(f(x))
-			h = h(this.first, this.last)+currentDistance;
+			f = h(this.first, this.last)+currentDistance;
 			current = this.open.get(0);
 			for(BlockWorld x : this.open) {
 				currentDistance = distance.get(this.open.indexOf(x));
 				//System.out.println(" h to compare : "+(h(x, this.last)+currentDistance)+" <= "+h);
 				//System.out.println("g : "+g(this.first, x));
-				if(h(x, this.last)+currentDistance <= h) {
+				if(h(x, this.last)+currentDistance <= f) {
 					//x.printTable();
 					//System.out.println("minimum");
 					//System.out.println(" h to compare : "+h(x, this.last)+"+"+currentDistance+" <= "+h);
@@ -52,11 +59,11 @@ public class Astar {
 					if(currentDistance==1) {
 						conseil = current;
 					}
-					h = h(x, this.last)+currentDistance;
+					f = h(x, this.last)+currentDistance;
 				}
 				//x.printTable();
 			}
-			if(current.isEqualTo(this.last)) { this.first=conseil; return conseil; }
+			if(current.isEqualTo(this.last)) { return conseil; }
 			// if x n'est pas le noeud final
 			currentDistance = this.open.indexOf(current)==-1?0:distance.get(this.open.indexOf(current));
 			distance.remove(new Integer(currentDistance));
@@ -65,11 +72,14 @@ public class Astar {
 			// for all y E successeurs(x)
 			for(BlockWorld y : current.next()) {
 				// if(y n'appartient pas aux fermes) ET (y n'appartient pas aux ouverts)
-				boolean isClosed=false;
+				boolean isOpen=false, isClosed=false;
+				for(int i=0; i<this.open.size(); i++) {
+					if(y.isEqualTo(this.open.get(i))) { isOpen = true; break; }
+				}
 				for(int i=0; i<this.closed.size(); i++) {
 					if(y.isEqualTo(this.closed.get(i))) { isClosed = true; break; }
 				}
-				if(!isClosed && (this.open.indexOf(y)==-1)) {
+				if(!isClosed && !isOpen) {
 					this.open.add(y);
 					distance.add(new Integer(currentDistance+1));
 				}
@@ -77,17 +87,9 @@ public class Astar {
 		}
 		
 		// Sortie
-		this.first = conseil;
 		return conseil;
 	}
 	
-	/**
-	 * Fonction heuristique de l'etat initial pour l'etat final (donnes dans le constructeur logique)
-	 */
-	public int h(){
-		return h(this.first, this.last);
-	}
-
 	/**
 	 * hZero : heuristique aveugle
 	 * @return 0
@@ -165,21 +167,5 @@ public class Astar {
 			}
 		}
 		return blocks;
-	}
-
-	/**
-	 * g : fonction de calcul de distance (hauteur de noeud) entre deux BlockWorld
-	 * genere un stack overflow
-	 * @param bw1 : l'etat initial
-	 * @param bw2 : l'etat final
-	 * @return le 'coût' entre les deux etats
-	 */
-	protected int g(BlockWorld bw1, BlockWorld bw2) {
-		if(!bw1.isEqualTo(bw2)) { 		
-			for(BlockWorld i : bw1.next()) {
-				return g(i,bw2)+1;
-			}
-		}
-		return 0;
 	}
 }

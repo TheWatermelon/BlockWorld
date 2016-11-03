@@ -37,7 +37,6 @@ public class Main {
 		bo.addStack(sh);
 		bo.addStack(sj);
 		
-		/////
 		BlockWorld box=new BlockWorld();
 		box.addStack(s1);
 		box.getTable().get(0).push(j);
@@ -75,6 +74,7 @@ public class Main {
 		do {
 			current=su.algorithm();
 			current.printTable();
+			su.setFirst(current);
 			try {
 				System.out.println("Press enter");
 				System.in.read();
