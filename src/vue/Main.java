@@ -71,17 +71,7 @@ public class Main {
 		}
 		*/
 		
-		do {
-			current=su.algorithm();
-			current.printTable();
-			su.setFirst(current);
-			/*
-			try {
-				System.out.println("Press enter");
-				System.in.read();
-			} catch(IOException exception) {}
-			*/
-		} while(!current.isEqualTo(box));
+		su.run();
 		
 	}
 }

@@ -58,13 +58,12 @@ public class Astar {
 				currentDistance = distance.get(this.open.indexOf(x));
 				if(h(x, this.last)+currentDistance <= f) {
 					current = x;
-					x.printTable();
 					f = h(x, this.last)+currentDistance;
-					if(currentDistance==1) {
+					
+					if(currentDistance<=2) {
 						conseil = current;
-						conseil.printTable();
-						System.out.println("h : "+f);
 					}
+					
 				}
 			}
 			// if x est le noeud final
@@ -76,13 +75,18 @@ public class Astar {
 			// for all y E successeurs(x)
 			for(BlockWorld y : current.next()) {
 				// if(y n'appartient pas aux fermes) ET (y n'appartient pas aux ouverts)
-				boolean isOpen=false, isClosed=false;
+				boolean isOpen=false, isClosed=false, isAdvice=false;
 				for(int i=0; i<this.open.size(); i++) {
 					if(y.isEqualTo(this.open.get(i))) { isOpen = true; break; }
 				}
 				for(int i=0; i<this.closed.size(); i++) {
 					if(y.isEqualTo(this.closed.get(i))) { isClosed = true; break; }
 				}
+				/*
+				for(int i=0; i<this.advices.size(); i++) {
+					if(y.isEqualTo(this.advices.get(i))) { isAdvice = true; break; }
+				}
+				*/
 				if(!isClosed && !isOpen) {
 					this.open.add(y);
 					distance.add(new Integer(currentDistance+1));
@@ -146,7 +150,7 @@ public class Astar {
 	 * @param bw2 : l'etat final
 	 * @return la valeur de l'etat
 	 */
-	protected int h(BlockWorld bw1, BlockWorld bw2) {
+	public int h(BlockWorld bw1, BlockWorld bw2) {
 		Block b1, b2;
 		int blocks=bw1.getBlocksCount();	// Initialisé au nombre de blocks de bw1
 
@@ -172,5 +176,21 @@ public class Astar {
 			}
 		}
 		return blocks;
+	}
+
+	public void run() {
+		BlockWorld current;
+		do {
+			current=algorithm();
+			current.printTable();
+			System.out.println(current.getChange());
+			setFirst(current);
+			/*
+			try {
+				System.out.println("Press enter");
+				System.in.read();
+			} catch(IOException exception) {}
+			*/
+		} while(!current.isEqualTo(this.last));
 	}
 }

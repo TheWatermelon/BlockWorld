@@ -6,14 +6,21 @@ import java.util.Stack;
 import modele.Block;
 
 public class BlockWorld {
-	ArrayList<Stack<Block>> table;
+	protected ArrayList<Stack<Block>> table;
+	protected String change;
 
 	/**
 	 * Constructeur par defaut
 	 */
 	public BlockWorld() {
 		table=new ArrayList<>();
+		change="do nothing";
 	}
+
+	/** getChange : connaitre le passe de l'etat
+	 * @return le changement de l'etat par rapport a un parent
+	 */
+	public String getChange() { return change; }
 
 	/**
 	 * addStack : ajoute une pile s a la table
@@ -100,6 +107,8 @@ public class BlockWorld {
 	 * @return le nouveau BlockWorld
 	 */
 	public BlockWorld put(Stack<Block> x,Stack<Block> y){
+		if(y.size()==0) { change="put "+x.get(x.size()-1).getValue()+" on table"; }
+		else { change="put "+x.get(x.size()-1).getValue()+" on "+y.get(y.size()-1).getValue(); }
 		y.push(x.pop());
 		return this;
 	}
