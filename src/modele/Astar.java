@@ -5,6 +5,7 @@ import java.util.*;
 public class Astar {
 	protected ArrayList<BlockWorld> open;
 	protected ArrayList<BlockWorld> closed;
+	protected ArrayList<BlockWorld> advices;
 	protected BlockWorld first;
 	protected BlockWorld last;
 	
@@ -16,10 +17,17 @@ public class Astar {
 	public Astar(BlockWorld init, BlockWorld term) {
 		this.first = init;
 		this.last = term;
+		this.advices = new ArrayList<BlockWorld>();
+		archiveAdvice(this.first);
+	}
+
+	protected void archiveAdvice(BlockWorld advice) {
+		this.advices.add(advice);
 	}
 
 	public void setFirst(BlockWorld bw) {
 		this.first = bw;
+		archiveAdvice(this.first);
 	}
 
 	public void setLast(BlockWorld bw) {
@@ -43,28 +51,24 @@ public class Astar {
 		
 		// Traitement
 		while(this.open.size()!=0) {
-			//current.printTable();
 			// x <- arg min(xEO)(f(x))
-			f = h(this.first, this.last)+currentDistance;
+			f = 99;
 			current = this.open.get(0);
 			for(BlockWorld x : this.open) {
 				currentDistance = distance.get(this.open.indexOf(x));
-				//System.out.println(" h to compare : "+(h(x, this.last)+currentDistance)+" <= "+h);
-				//System.out.println("g : "+g(this.first, x));
 				if(h(x, this.last)+currentDistance <= f) {
-					//x.printTable();
-					//System.out.println("minimum");
-					//System.out.println(" h to compare : "+h(x, this.last)+"+"+currentDistance+" <= "+h);
 					current = x;
+					x.printTable();
+					f = h(x, this.last)+currentDistance;
 					if(currentDistance==1) {
 						conseil = current;
+						conseil.printTable();
+						System.out.println("h : "+f);
 					}
-					f = h(x, this.last)+currentDistance;
 				}
-				//x.printTable();
 			}
+			// if x est le noeud final
 			if(current.isEqualTo(this.last)) { return conseil; }
-			// if x n'est pas le noeud final
 			currentDistance = this.open.indexOf(current)==-1?0:distance.get(this.open.indexOf(current));
 			distance.remove(new Integer(currentDistance));
 			this.open.remove(current);
@@ -151,8 +155,8 @@ public class Astar {
 			if(bw2.getTable().get(i).size()==0) { continue; }
 			b1 = bw2.getTable().get(i).get(0); // Le premier block de la pile de l'etat final
 			for(int j=0; j<bw1.getTable().size(); j++) {	// Pour chaque pile de l'etat initial
-			// Cas pile vide de l'etat initial
-			if(bw1.getTable().get(j).size()==0) { continue; }
+				// Cas pile vide de l'etat initial
+				if(bw1.getTable().get(j).size()==0) { continue; }
 				if(bw1.getTable().get(j).get(0).isEqualTo(b1)) { // Si le premier block correspond alors
 					blocks--;
  					b2 = bw2.up(b1);
@@ -163,6 +167,7 @@ public class Astar {
  						b1 = b2;
  						b2 = bw2.up(b1);
  					}
+					break;
 				}
 			}
 		}
