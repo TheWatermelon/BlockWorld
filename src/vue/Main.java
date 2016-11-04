@@ -70,7 +70,7 @@ public class Main {
 			}
 		}
 		*/
-		
+		// C'est A* qui s'occupe de lancer l'algorithme
 		su.run();
 		
 	}
