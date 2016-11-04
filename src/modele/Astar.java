@@ -59,11 +59,11 @@ public class Astar {
 				if(h(x, this.last)+currentDistance <= f) {
 					current = x;
 					f = h(x, this.last)+currentDistance;
-					
+					//System.out.println("Comparaison currentDistance : "+currentDistance+" avec hauteur : "+x.getHauteur());
+					//conseil = current.getHauteur()<2?current:current.searchParent(1);
 					if(currentDistance<=2) {
 						conseil = current;
 					}
-					
 				}
 			}
 			// if x est le noeud final
@@ -89,6 +89,7 @@ public class Astar {
 				*/
 				if(!isClosed && !isOpen) {
 					this.open.add(y);
+					//System.out.println("Deuxieme comparaison currentDistance : "+currentDistance+" avec hauteur : "+y.getHauteur());
 					distance.add(new Integer(currentDistance+1));
 				}
 			}
@@ -183,7 +184,7 @@ public class Astar {
 		do {
 			current=algorithm();
 			current.printTable();
-			System.out.println(current.getChange());
+			System.out.println(current.getHauteur()+" "+current.getChange());
 			setFirst(current);
 			/*
 			try {

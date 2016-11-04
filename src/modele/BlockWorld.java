@@ -8,19 +8,46 @@ import modele.Block;
 public class BlockWorld {
 	protected ArrayList<Stack<Block>> table;
 	protected String change;
+	protected int hauteur;
+	protected BlockWorld parent;
 
 	/**
 	 * Constructeur par defaut
 	 */
 	public BlockWorld() {
 		table=new ArrayList<>();
+		parent=null;
 		change="do nothing";
+		hauteur=0;
 	}
 
 	/** getChange : connaitre le passe de l'etat
 	 * @return le changement de l'etat par rapport a un parent
 	 */
 	public String getChange() { return change; }
+
+	/** getHauteur : accesseur de la hauteur
+	 * @return hauteur
+	 */
+	public int getHauteur() { return hauteur; }
+
+	/** setHauteur : mutateur de la hauteur
+	 * @return void
+	 */
+	public void setHauteur(int h) { this.hauteur = h; }
+
+	public BlockWorld getParent() { return parent; }
+
+	public void setParent(BlockWorld bw) { this.parent = bw; }
+
+	public BlockWorld searchParent(int h) {
+		if(h>=this.hauteur) { return null; }
+		BlockWorld p=this;
+		for(int i=0; i!=this.hauteur-h; i++) {
+			p = p.getParent();
+		}
+		return p;
+	}
 
 	/**
 	 * addStack : ajoute une pile s a la table
@@ -193,6 +220,8 @@ public class BlockWorld {
 				for(int j=0; j<this.table.size(); j++) {	// Pour chaque pile de destination
 					if(i==j) { continue; }	// On passe le deplacement d'un block de sa pile vers sa pile
 					copie=copy();
+					copie.setHauteur(this.hauteur+1);
+					copie.setParent(this);
 					sOrig = copie.getTable().get(i);	// On prend la pile source
 					sDest = copie.getTable().get(j);	// On prend la pile destination
 					successeurs[etatSuccesseur++]=copie.put(sOrig, sDest);	// Ajout de l'etat successeur au tableau
