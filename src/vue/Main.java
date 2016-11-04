@@ -56,21 +56,10 @@ public class Main {
 		BlockWorld current;
 	
 		bo.printTable();
-		System.out.println("Etat initial");
+		System.out.println("Initial state\n");
 		box.printTable();
-		System.out.println("Etat final");
+		System.out.println("Final state\n");
 		
-		/*
-		{
-			int cpt=1;
-			for(BlockWorld i : bo.next()) {
-				System.out.println();
-				i.printTable();
-				System.out.println("Etat successeur "+(cpt++));
-			}
-		}
-		*/
-		// C'est A* qui s'occupe de lancer l'algorithme
 		su.run();
 		
 	}

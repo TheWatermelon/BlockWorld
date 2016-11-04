@@ -41,7 +41,7 @@ public class BlockWorld {
 	public void setParent(BlockWorld bw) { this.parent = bw; }
 
 	public BlockWorld searchParent(int h) {
-		if(h>=this.hauteur) { return null; }
+		if(h>=this.hauteur) { return this; }
 		BlockWorld p=this;
 		for(int i=0; i!=this.hauteur-h; i++) {
 			p = p.getParent();

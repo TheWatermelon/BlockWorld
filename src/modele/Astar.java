@@ -5,7 +5,6 @@ import java.util.*;
 public class Astar {
 	protected ArrayList<BlockWorld> open;
 	protected ArrayList<BlockWorld> closed;
-	protected ArrayList<BlockWorld> advices;
 	protected BlockWorld first;
 	protected BlockWorld last;
 	
@@ -17,17 +16,10 @@ public class Astar {
 	public Astar(BlockWorld init, BlockWorld term) {
 		this.first = init;
 		this.last = term;
-		this.advices = new ArrayList<BlockWorld>();
-		archiveAdvice(this.first);
-	}
-
-	protected void archiveAdvice(BlockWorld advice) {
-		this.advices.add(advice);
 	}
 
 	public void setFirst(BlockWorld bw) {
 		this.first = bw;
-		archiveAdvice(this.first);
 	}
 
 	public void setLast(BlockWorld bw) {
@@ -59,15 +51,12 @@ public class Astar {
 				if(h(x, this.last)+currentDistance <= f) {
 					current = x;
 					f = h(x, this.last)+currentDistance;
-					//System.out.println("Comparaison currentDistance : "+currentDistance+" avec hauteur : "+x.getHauteur());
-					//conseil = current.getHauteur()<2?current:current.searchParent(1);
-					if(currentDistance<=2) {
-						conseil = current;
-					}
+					conseil = current.getHauteur()<2?current:current.searchParent(this.first.getHauteur()+1);
 				}
 			}
 			// if x est le noeud final
 			if(current.isEqualTo(this.last)) { return conseil; }
+			// Sinon
 			currentDistance = this.open.indexOf(current)==-1?0:distance.get(this.open.indexOf(current));
 			distance.remove(new Integer(currentDistance));
 			this.open.remove(current);
@@ -82,14 +71,8 @@ public class Astar {
 				for(int i=0; i<this.closed.size(); i++) {
 					if(y.isEqualTo(this.closed.get(i))) { isClosed = true; break; }
 				}
-				/*
-				for(int i=0; i<this.advices.size(); i++) {
-					if(y.isEqualTo(this.advices.get(i))) { isAdvice = true; break; }
-				}
-				*/
 				if(!isClosed && !isOpen) {
 					this.open.add(y);
-					//System.out.println("Deuxieme comparaison currentDistance : "+currentDistance+" avec hauteur : "+y.getHauteur());
 					distance.add(new Integer(currentDistance+1));
 				}
 			}
@@ -181,10 +164,11 @@ public class Astar {
 
 	public void run() {
 		BlockWorld current;
+		System.out.println("Algorithm start !");
 		do {
 			current=algorithm();
 			current.printTable();
-			System.out.println(current.getHauteur()+" "+current.getChange());
+			System.out.println(current.getChange()+"\n");
 			setFirst(current);
 			/*
 			try {
@@ -193,5 +177,6 @@ public class Astar {
 			} catch(IOException exception) {}
 			*/
 		} while(!current.isEqualTo(this.last));
+		System.out.println("Algorithm success !");
 	}
 }
