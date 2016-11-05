@@ -56,6 +56,17 @@ public class BlockWorld {
 	public void addStack( Stack<Block> s){
 		table.add(s);
 	}
+
+	/**
+	 * purgeTable : retire de la table toutes les piles vides
+	 */
+	protected void purgeTable() {
+		for(int i=0; i<this.table.size(); i++) {
+			for(Stack<Block> stack : this.table) {
+				if(stack.isEmpty()) {this.table.remove(stack); break; }
+			}
+		}
+	}
 	
 	/**
 	 * getTable : accesseur de la table
@@ -170,8 +181,8 @@ public class BlockWorld {
 			if(this.table.get(i).size()==0) { continue; }
 			b1 = this.table.get(i).get(0); // Le premier block de la pile du comparant
 			for(int j=0; j<bw.getTable().size(); j++) {	// Pour chaque pile du comparé
-			// Cas pile vide du comparé
-			if(bw.getTable().get(j).size()==0) { continue; }
+				// Cas pile vide du comparé
+				if(bw.getTable().get(j).size()==0) { continue; }
 				if(bw.getTable().get(j).get(0).isEqualTo(b1)) { // Si le premier block correspond alors
 					blocks--;
  					b2 = this.up(b1);
@@ -197,12 +208,14 @@ public class BlockWorld {
 	 * @return un tableau (BlockWorld[]) des successeurs du BlockWorld appelant
 	 */
 	public BlockWorld[] next() {
+		// Preparation de l'etat
+		purgeTable();
 		// Calcul du nombre d'etats successeurs et stockage des piles sources d'etats successeurs
 		int nbSuccesseurs=0;
 		int[] pilesSource = new int[this.table.size()];
 		for(int i=0; i<this.table.size(); i++) {
 			if(!this.table.get(i).isEmpty()) {
-				nbSuccesseurs+=this.table.size()-1;
+				nbSuccesseurs+=this.table.size();
 				pilesSource[i]=1;
 			}
 		}
@@ -217,14 +230,20 @@ public class BlockWorld {
 		Stack<Block> sOrig, sDest;
 		for(int i=0; i<this.table.size(); i++) {	// Pour chaque pile d'origine
 			if(pilesSource[i]==1) {	// Si la pile d'origine est une pile source d'etats successeurs
-				for(int j=0; j<this.table.size(); j++) {	// Pour chaque pile de destination
+				for(int j=0; j<=this.table.size(); j++) {	// Pour chaque pile de destination
 					if(i==j) { continue; }	// On passe le deplacement d'un block de sa pile vers sa pile
 					copie=copy();
 					copie.setHauteur(this.hauteur+1);
 					copie.setParent(this);
 					sOrig = copie.getTable().get(i);	// On prend la pile source
-					sDest = copie.getTable().get(j);	// On prend la pile destination
+					if(j==this.table.size()) { // Cas de la creation d'une pile de destination
+						sDest = new Stack<Block>();
+						copie.addStack(sDest);
+					} else {
+						sDest = copie.getTable().get(j);	// On prend la pile destination
+					}
 					successeurs[etatSuccesseur++]=copie.put(sOrig, sDest);	// Ajout de l'etat successeur au tableau
+					copie.purgeTable();
 				}
 			}
 		}
