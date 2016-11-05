@@ -3,13 +3,11 @@ package vue;
 import java.util.Stack;
 import java.io.*;
 
-import modele.Astar;
-import modele.Block;
-import modele.BlockWorld;
+import modele.*;
 
 public class Main {
 	public static void main(String[] args) {
-		
+		/*
 		//Donnees de test
 		Block a=new Block('a');
 		Block b=new Block('b');
@@ -49,16 +47,17 @@ public class Main {
 		box.getTable().get(0).push(c);
 		box.getTable().get(0).push(b);
 		box.getTable().get(0).push(a);
-		box.addStack(s0);
-		box.addStack(s0);
-		box.addStack(s0);
-		Astar su=new Astar(bo, box);
-		BlockWorld current;
+		*/
+
+		BlockWorld bw1 = new BlockWorld("etatInitial.txt");
+		BlockWorld bw2 = new BlockWorld("etatFinal.txt");
 	
-		bo.printTable();
+		bw1.printTable();
 		System.out.println("Initial state\n");
-		box.printTable();
+		bw2.printTable();
 		System.out.println("Final state\n");
+
+		Astar su = new Astar(bw1, bw2);
 		
 		su.run();
 		

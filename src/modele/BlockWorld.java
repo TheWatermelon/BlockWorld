@@ -2,6 +2,7 @@ package modele;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.io.*;
 
 import modele.Block;
 
@@ -21,25 +22,72 @@ public class BlockWorld {
 		hauteur=0;
 	}
 
-	/** getChange : connaitre le passe de l'etat
+	/**
+	 * Constructeur logique. Prend un nom de fichier en entree.
+	 * Le fichier doit etre du format suivant : chaque ligne correspond a un emplacement sur la table et les blocs sont indiques par des caracteres minuscules de 'a' a 'z'
+	 */
+	public BlockWorld(String filename) {
+		table=new ArrayList<>();
+		parent=null;
+		change="do nothing";
+		hauteur=0;
+
+		BufferedReader lecteur=null;
+		try {
+			lecteur = new BufferedReader(new FileReader(filename));
+			try {
+				String ligne;
+				while((ligne=lecteur.readLine())!=null) {
+					Stack<Block> s = new Stack<Block>();
+					for(int i=0; i<ligne.length(); i++) {
+						s.push(new Block(ligne.charAt(i)));
+					}
+					table.add(s);
+				}
+			} catch(IOException e) {
+				System.err.println("Erreur de lecture du fichier '"+filename+"'");
+			}
+		} catch(FileNotFoundException e) {
+			System.err.println("Le fichier '"+filename+"' n'existe pas.");
+		}
+	}
+
+	/** 
+	 * getChange : connaitre le passe de l'etat
 	 * @return le changement de l'etat par rapport a un parent
 	 */
 	public String getChange() { return change; }
 
-	/** getHauteur : accesseur de la hauteur
-	 * @return hauteur
+	/** 
+	 * getHauteur : accesseur de la hauteur
+	 * @return la hauteur
 	 */
 	public int getHauteur() { return hauteur; }
 
-	/** setHauteur : mutateur de la hauteur
+	/** 
+	 * setHauteur : mutateur de la hauteur
+	 * @param h : la nouvelle hauteur
 	 * @return void
 	 */
 	public void setHauteur(int h) { this.hauteur = h; }
 
+	/**
+	 * getParent : renvoie le parent de cet etat. La racine n'a pas de parent (parent=null)
+	 * @return le parent
+	 */
 	public BlockWorld getParent() { return parent; }
 
+	/**
+	 * setParent : mutateur de l'attribut parent
+	 * @param bw : le nouveau parent
+	 */
 	public void setParent(BlockWorld bw) { this.parent = bw; }
 
+	/**
+	 * searchParent : renvoie le parent a la hauteur donnee. Si la hauteur est superieure ou egale a la hauteur de l'etat, renvoie l'etat
+	 * @param h : la hauteur du parent recherche
+	 * @return le parent recherche
+	 */
 	public BlockWorld searchParent(int h) {
 		if(h>=this.hauteur) { return this; }
 		BlockWorld p=this;
@@ -76,6 +124,10 @@ public class BlockWorld {
 		return table;
 	}
 
+	/**
+	 * getBlockCount : renvoie le nombre de blocks sur la table
+	 * @return le nombre le blocks sur la table
+	 */
 	public int getBlocksCount() {
 		int blocks=0;
 
@@ -110,7 +162,14 @@ public class BlockWorld {
 		int i;
 		boolean onTable=false;
 		for(i=0; i<table.size(); i++) {
-			if(table.get(i).indexOf(block)!=-1) { onTable = true; break; }
+			for(Block b : table.get(i)) { 
+				if(b.isEqualTo(block)) { 
+					block=b;
+					onTable=true; 
+					break; 
+				}
+			}
+			if(onTable) { break; }
 		}
 		if(!onTable) { return null; }
 		// Verifie que le block n'est pas le dernier
@@ -126,8 +185,22 @@ public class BlockWorld {
 	 * @return vrai si b1 est au-dessus de b2, faux sinon
 	 */
 	public boolean on(Block b1,Block b2){
-		for(int i=0;i<table.size();i++){	// pour chaque pile
-			if(table.get(i).indexOf(b2)!=-1) {	// cette pile contient le bloc b2
+		for(int i=0;i<table.size();i++) {	// pour chaque pile
+			boolean onStack=false;
+			for(Block b : table.get(i)) {	// recupere le block equivalent a b1
+				if(b.isEqualTo(b1)) {
+					b1=b;
+					break;
+				}
+			}
+			for(Block b : table.get(i)) { // recupere le block equivalent a b2
+				if(b.isEqualTo(b2)) { 
+					b2=b;
+					onStack=true; 
+					break; 
+				}
+			}
+			if(onStack) {	// cette pile contient le bloc b2
 				if(table.get(i).indexOf(b1)==(table.get(i).indexOf(b2)+1)) {	// si b1 est au-dessus de b2
 					return true;
 				} else {
