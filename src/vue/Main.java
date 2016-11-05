@@ -1,5 +1,7 @@
 package vue;
 
+import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Stack;
 import java.io.*;
 
@@ -20,9 +22,10 @@ public class Main {
 		Block g=new Block('g');
 		Block h=new Block('h');
 		Block i=new Block('i');
-		Block j=new Block('j');
-		Stack<Block> s0 = new Stack<>();
+		Block j=new Block('j'); 
+		Stack<Block> s0 = new Stack<>(); 
 		Stack<Block> s1 = new Stack<>();
+		
 		Stack<Block> s= new Stack<>();
 		s.push(b);
 		Stack<Block> si= new Stack<>();
@@ -36,42 +39,130 @@ public class Main {
 		bo.addStack(si);
 		bo.addStack(sh);
 		bo.addStack(sj);
-		
+		s1.add(j);s1.add(i);s1.add(h);
+		s1.add(g);s1.add(f);s1.add(e);
+		s1.add(d);s1.add(c);s1.add(b);s1.add(a);
 		BlockWorld box=new BlockWorld();
 		box.addStack(s1);
-		box.getTable().get(0).push(j);
-		box.getTable().get(0).push(i);
-		box.getTable().get(0).push(h);
-		box.getTable().get(0).push(g);
-		box.getTable().get(0).push(f);
-		box.getTable().get(0).push(e);
-		box.getTable().get(0).push(d);
-		box.getTable().get(0).push(c);
-		box.getTable().get(0).push(b);
-		box.getTable().get(0).push(a);
-		box.addStack(s0);
-		box.addStack(s0);
-		box.addStack(s0);
-		Astar su=new Astar(bo, box);
-		BlockWorld current;
+		s1=new Stack<>();
+        box.addStack(s1);
+		box.addStack(s1);
+		box.addStack(s1);
+		//box.addStack(s0);
+		Astar su=new Astar(bo,bo);
+		//BlockWorld current;
 	
 		bo.printTable();
-		System.out.println("Etat initial");
 		box.printTable();
-		System.out.println("Etat final");
+		//System.out.println(su.hu(bo, box));
+		//box.printTable();
+		//System.out.println("Etat final");
 		
-		/*
-		{
-			int cpt=1;
-			for(BlockWorld i : bo.next()) {
-				System.out.println();
-				i.printTable();
-				System.out.println("Etat successeur "+(cpt++));
+		
+	  
+		
+		 
+			//PriorityQueue<BlockWorld> pox=new PriorityQueue<>(); 
+			//PriorityQueue<BlockWorld> poxi=new PriorityQueue<>();
+			for(BlockWorld bij: bo.next()){
+				//bj.incost=su.hu(bj, box);
+				System.out.println(su.hu(bo, box));
+				bij.printTable();
 			}
+			
+			 
+			//pox.poll().printTable();
+			/*
+			for(BlockWorld bj: pox.poll().next()){
+				bj.incost=su.hu(bj, box);
+				poxi.add(bj);
+			}
+			
+			for(BlockWorld bj: pox){
+				bj.printTable();
+				System.out.print(su.hu(bj, box));
+			}
+			int com=0;
+			for(BlockWorld bj: pox){
+				if(bj.equals(pox.peek())){
+					com++;
+				}
+				
+			}
+			
+			System.out.print(com);*/	
+		//	pox.poll().printTable();
+			
+		//	System.out.print(su.hu(poxi.poll(), box));
+		//su.run();
+		
+		/*PriorityQueue<BlockWorld> po=new PriorityQueue<>(); 
+		
+		 
+		PriorityQueue<BlockWorld> poxie=new PriorityQueue<>();
+		PriorityQueue<BlockWorld> poxise=new PriorityQueue<>();
+		PriorityQueue<BlockWorld> poi=new PriorityQueue<>(); 
+		PriorityQueue<BlockWorld> poit=new PriorityQueue<>();
+		
+		ArrayList<BlockWorld> t=new ArrayList<>();
+        for(BlockWorld bj: bo.next()){
+			bj.incost=su.h(bj, box);
+			t.add(bj);
+		 }
+    
+		for(BlockWorld bj: bo.next()){
+			bj.incost=su.h(bj, box);
+			po.add(bj);
 		}
-		*/
 		
-		su.run();
 		
-	}
+		
+        for(BlockWorld bj: pox.poll().next()){
+        	bj.incost=su.h(bj, box);
+        	poxi.add(bj);
+			
+		}
+		
+      /*  for(BlockWorld bj: poxi){
+        	bj.incost=su.h(bj, box);
+			bj.printTable();
+			//System.out.println(su.h(bj,box));
+			
+		}*/
+      /*  for(BlockWorld bj: poxi.poll().next()){
+        	bj.incost=su.h(bj, box);
+        	 poxie.add(bj);
+			//System.out.print(su.h(bj,box));
+			
+		}
+        for(BlockWorld bj: poxie.poll().next()){
+        	bj.incost=su.h(bj, box);
+       	 poxise.add(bj);
+			//System.out.print(su.h(bj,box));
+			
+		}
+        
+        for(BlockWorld bj: poxise.poll().next()){
+        	bj.incost=su.h(bj, box);	
+       	 poi.add(bj);
+			//System.out.print(su.h(bj,box));
+			
+		}
+        for(BlockWorld bj: poi){
+        	bj.incost=su.h(bj, box);
+          	 poit.add(bj);
+   			//System.out.print(su.h(bj,box));
+   			
+   		}
+        for(BlockWorld bj: poi){
+			
+         bj.printTable();
+  		System.out.print(su.h(bj,box));
+  			
+  		}
+        
+        
+      poi.poll().printTable();*/
+   
+    }
 }

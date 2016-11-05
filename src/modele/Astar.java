@@ -8,17 +8,21 @@ public class Astar {
 	protected ArrayList<BlockWorld> advices;
 	protected BlockWorld first;
 	protected BlockWorld last;
+	public PriorityQueue<BlockWorld> openlist;
+	//PriorityQueue<BlockWorld> listouverts; 
 	
 	/**
 	 * Constructeur logique
 	 * @param init : l'etat initial
 	 * @param term : l'etat final
 	 */
+ 
 	public Astar(BlockWorld init, BlockWorld term) {
 		this.first = init;
 		this.last = term;
 		this.advices = new ArrayList<BlockWorld>();
 		archiveAdvice(this.first);
+		
 	}
 
 	protected void archiveAdvice(BlockWorld advice) {
@@ -37,6 +41,40 @@ public class Astar {
 	/**
 	 * Algorithme de A*
 	 */
+	
+	
+	public BlockWorld algogbegbe(BlockWorld initial,BlockWorld finale){
+	
+	//listouverts.add(initial);
+		openlist=new PriorityQueue<>();
+		
+		
+		for(BlockWorld bi:initial.next()){
+			bi.incost=this.hu(bi,finale)+h(bi,finale);
+			
+			if(!openlist.isEmpty()){
+			for(BlockWorld bu: openlist){
+				if(bi.isEqualTo(bu)){
+					if(bi.incost<bu.incost){
+						bu.incost=bi.incost;
+						System.out.print("lola");
+					}
+				}else{
+					System.out.print("lol");
+					openlist.add(bi);	
+				}
+				
+			}	
+		   } 
+		} 
+		while(!openlist.isEmpty()&&(openlist.peek().incost!=-1)){
+			algogbegbe(openlist.poll(), finale);
+		}
+		
+
+		return openlist.peek();
+		
+	}
 	public BlockWorld algorithm() {
 		// Initialisation
 		this.open = new ArrayList<BlockWorld>();
@@ -114,6 +152,16 @@ public class Astar {
 	 * @param bw2 : l'etat final
 	 * @return la valeur de l'etat
 	 */
+	protected void ajoutOuvert(BlockWorld b){
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 	protected int hSymetrique(BlockWorld bw1,BlockWorld bw2){
 		int blocks=0;
 		for(int i=0; i<bw1.getTable().size(); i++){	// Pour chaque pile de la table
@@ -178,6 +226,50 @@ public class Astar {
 		}
 		return blocks;
 	}
+	
+	// Methode devant me permettre de calculer le nommbre de block à partir du nième bloc différent de celui du blockwordfinal+
+	 
+	public int hu(BlockWorld bw1, BlockWorld bw2) {
+		Block b1, b2; int deff=0; Block n = null;
+		int blocks=bw1.getBlocksCount();	// InitialisÃ© au nombre de blocks de bw1
+
+		for(int i=0; i<bw2.getTable().size(); i++) {	// Pour chaque pile de l'etat final
+			// Cas pile vide de l'etat final
+			if(bw2.getTable().get(i).size()==0) { continue; }
+			b1 = bw2.getTable().get(i).get(0); // Le premier block de la pile de l'etat final
+			for(int j=0; j<bw1.getTable().size(); j++) {	// Pour chaque pile de l'etat initial
+				// Cas pile vide de l'etat initial
+				if(bw1.getTable().get(j).size()==0) { continue; }
+				if(bw1.getTable().get(j).get(0).isEqualTo(b1)) { // Si le premier block correspond alors
+					blocks--;
+ 					b2 = bw2.up(b1);
+ 					while(b1!=null && b2!=null && bw1.on(b2, b1)) {	// Tant que b2 est au-dessus de b1 dans l'etat initial
+ 						// Le block est bien positionne
+ 						blocks--;
+ 						// on monte d'un niveau
+ 						//System.out.print(b1.getValue()+" et "+b2.getValue());
+ 						b1 = b2;
+ 						b2 = bw2.up(b1);
+ 						
+ 					}
+ 					//System.out.print(b1.getValue()+" et "+b2.getValue()); 
+ 					deff=bw1.relatedtoTop(b2);
+ 					
+					break;
+				}
+			}
+		}
+		return deff;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void run() {
 		BlockWorld current;

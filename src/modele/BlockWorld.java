@@ -5,11 +5,12 @@ import java.util.Stack;
 
 import modele.Block;
 
-public class BlockWorld {
+public class BlockWorld implements Comparable<BlockWorld> {
 	protected ArrayList<Stack<Block>> table;
 	protected String change;
 	protected int hauteur;
 	protected BlockWorld parent;
+	public int incost;
 
 	/**
 	 * Constructeur par defaut
@@ -19,6 +20,7 @@ public class BlockWorld {
 		parent=null;
 		change="do nothing";
 		hauteur=0;
+		incost=0;
 	}
 
 	/** getChange : connaitre le passe de l'etat
@@ -107,6 +109,26 @@ public class BlockWorld {
 
 		return table.get(i).get(table.get(i).indexOf(block)+1);
 	}
+	
+	//methode pour voir le nombre de block avant le sommet d'une pile
+	public int relatedtoTop(Block block) {
+		// Verifie que le block est sur la table
+		int compteur = 0;
+		 
+		for(int i=0; i<table.size(); i++) {
+			
+			if(table.get(i).indexOf(block)!=-1) {
+				
+				for(int j=table.get(i).indexOf(block); j<table.get(i).size(); j++){
+				compteur++;	
+				}
+	   }
+		
+		
+	}
+		return compteur;
+	}
+	
 
 	/**
 	 * on : verifie que b1 est au-dessus de b2
@@ -289,4 +311,14 @@ public class BlockWorld {
 		}
 		System.out.println(lastLine+"\n");
 	}
+
+	@Override
+	public int compareTo(BlockWorld o) {
+		// TODO Auto-generated method stub
+
+       
+        return this.incost<o.incost?1:0;
+	}
+  
+	 
 }
