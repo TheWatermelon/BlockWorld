@@ -37,7 +37,7 @@ public class Astar {
 		ArrayList<Integer> distance = new ArrayList<Integer>();
 		int currentDistance=0;
 		distance.add(new Integer(currentDistance));
-		int f = h(this.first, this.last);
+		int f = h0(this.first, this.last);
 		BlockWorld current = this.first;
 		BlockWorld conseil = current;
 		
@@ -48,9 +48,9 @@ public class Astar {
 			current = this.open.get(0);
 			for(BlockWorld x : this.open) {
 				currentDistance = distance.get(this.open.indexOf(x));
-				if(h(x, this.last)+currentDistance <= f) {
+				if(h0(x, this.last)+currentDistance <= f) {
 					current = x;
-					f = h(x, this.last)+currentDistance;
+					f = h0(x, this.last)+currentDistance;
 					conseil = current.getHauteur()<2?current:current.searchParent(this.first.getHauteur()+1);
 				}
 			}
@@ -86,7 +86,7 @@ public class Astar {
 	 * hZero : heuristique aveugle
 	 * @return 0
 	 */
-	public int hZero() {
+	public int h0(BlockWorld bw1, BlockWorld bw2) {
 		return 0;
 	}
 	
@@ -162,13 +162,49 @@ public class Astar {
 		return blocks;
 	}
 
+	/**
+	 * h1 : fonction heuristique mieux informee. Un coefficient s'incremente a chaque nieme bon block.
+	 * @param bw1 : l'etat initial
+	 * @param bw2 : l'etat final
+	 * @return la valeur de l'etat
+	 */
+	public int h1(BlockWorld bw1, BlockWorld bw2) {
+		Block b1, b2;
+		int coef=1, blocks=bw1.getBlocksCount();	// Initialisé au nombre de blocks de bw1
+
+		for(int i=0; i<bw2.getTable().size(); i++) {	// Pour chaque pile de l'etat final
+			// Cas pile vide de l'etat final
+			if(bw2.getTable().get(i).size()==0) { continue; }
+			b1 = bw2.getTable().get(i).get(0); // Le premier block de la pile de l'etat final
+			for(int j=0; j<bw1.getTable().size(); j++) {	// Pour chaque pile de l'etat initial
+				// Cas pile vide de l'etat initial
+				if(bw1.getTable().get(j).size()==0) { continue; }
+				if(bw1.getTable().get(j).get(0).isEqualTo(b1)) { // Si le premier block correspond alors
+					coef=1;
+					blocks-=coef;
+ 					b2 = bw2.up(b1);
+ 					while(b1!=null && b2!=null && bw1.on(b2, b1)) {	// Tant que b2 est au-dessus de b1 dans l'etat initial
+ 						// Le block est bien positionne
+ 						coef++;
+						blocks-=coef;
+ 						// on monte d'un niveau
+ 						b1 = b2;
+ 						b2 = bw2.up(b1);
+ 					}
+					break;
+				}
+			}
+		}
+		return blocks;
+	}
+
 	public void run() {
 		BlockWorld current;
 		System.out.println("Algorithm start !");
 		do {
 			current=algorithm();
 			current.printTable();
-			System.out.println(current.getChange()+"\n");
+			System.out.println(current.getChange()+" "+h1(current, this.last)+"\n");
 			setFirst(current);
 			/*
 			try {
