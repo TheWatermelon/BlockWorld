@@ -76,11 +76,7 @@ public class Astar {
 										}
 										finali+=finale.getTable().get(i).size()-compteur;   //On tient du fait qu'on avait déjà eu des égalités pour distinguer les cas
 										finali+=initial.getTable().get(j).size()-(initial.getTable().get(j).indexOf(initial.getTable().get(j).get(g-1))+1); //On recherche la position du block différent dansle monde initial
-
 										break;
-
-
-
 									}
 								}
 							}
