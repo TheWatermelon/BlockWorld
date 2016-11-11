@@ -23,8 +23,9 @@ public class BlockWorld {
 	}
 
 	/**
-	 * Constructeur logique. Prend un nom de fichier en entree.
+	 * Constructeur logique a partir d'un fichier.
 	 * Le fichier doit etre du format suivant : chaque ligne correspond a un emplacement sur la table et les blocs sont indiques par des caracteres minuscules de 'a' a 'z'
+	 * @param filename : le nom du fichier d'entree
 	 */
 	public BlockWorld(String filename) {
 		table=new ArrayList<>();
@@ -241,36 +242,13 @@ public class BlockWorld {
 	}
 	
 	/**
-	 * isEqualTo : fonction d'egalite entre BlockWorld. INVALIDE
+	 * isEqualTo : fonction d'egalite entre BlockWorld.
 	 * @param bw : le BlockWorld a comparer
 	 * @return vrai si bw est egal au BlockWorld appelant, faux sinon
 	 */
 	public boolean isEqualTo(BlockWorld bw) {
-		Block b1, b2;
-		int blocks=this.getBlocksCount();	// Initialisé au nombre de blocks du comparé
-
-		for(int i=0; i<this.table.size(); i++) {	// Pour chaque pile du comparant
-			// Cas pile vide du comparant
-			if(this.table.get(i).size()==0) { continue; }
-			b1 = this.table.get(i).get(0); // Le premier block de la pile du comparant
-			for(int j=0; j<bw.getTable().size(); j++) {	// Pour chaque pile du comparé
-				// Cas pile vide du comparé
-				if(bw.getTable().get(j).size()==0) { continue; }
-				if(bw.getTable().get(j).get(0).isEqualTo(b1)) { // Si le premier block correspond alors
-					blocks--;
- 					b2 = this.up(b1);
- 					while(b1!=null && b2!=null && bw.on(b2, b1)) {	// Tant que b2 est au-dessus de b1 dans le comparé
- 						// Le block est bien positionné
- 						blocks--;
- 						// on monte d'un niveau
- 						b1 = b2;
- 						b2 = this.up(b1);
- 					}
-				}
-			}
-		}
-
-		if(blocks==0) {
+		HeuristiqueAbstraite heuristique = new HeuristiquePosition();
+		if(heuristique.h(this, bw)==0) {
 			return true;
 		}
 		return false;
