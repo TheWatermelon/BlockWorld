@@ -1,5 +1,11 @@
 package modele;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 import java.util.*;
 
 public class HeuristiqueSymetrique implements HeuristiqueAbstraite {

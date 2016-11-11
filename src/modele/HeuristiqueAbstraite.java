@@ -1,5 +1,11 @@
 package modele;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 public interface HeuristiqueAbstraite {
 	/**
 	 * nom : Le nom de la strategie

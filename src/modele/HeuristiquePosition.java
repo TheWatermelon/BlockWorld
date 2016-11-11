@@ -1,5 +1,11 @@
 package modele;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 public class HeuristiquePosition implements HeuristiqueAbstraite {
 	@Override
 	public String nom() { return "HeuristiquePosition"; }

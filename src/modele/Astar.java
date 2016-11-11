@@ -2,27 +2,29 @@ package modele;
 
 import java.util.*;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 public class Astar {
 	protected ArrayList<BlockWorld> open;
 	protected ArrayList<BlockWorld> closed;
 	protected BlockWorld first;
 	protected BlockWorld last;
 	protected HeuristiqueAbstraite heuristique;
-
-	protected int nodesVisited;
-	protected int totalNodes;
 	
 	/**
 	 * Constructeur logique
 	 * @param init : l'etat initial
 	 * @param term : l'etat final
+	 * @param h : l'heuristique a utiliser
 	 */
 	public Astar(BlockWorld init, BlockWorld term, HeuristiqueAbstraite h) {
 		this.first = init;
 		this.last = term;
 		this.heuristique = h;
-		this.nodesVisited=0;
-		this.totalNodes=0;
 	}
 
 	/**
@@ -46,7 +48,6 @@ public class Astar {
 	 * @return Le meilleur successeur de l'etat initial
 	 */
 	public BlockWorld algorithm() {
-		this.nodesVisited=0;
 		// Initialisation
 		this.open = new ArrayList<BlockWorld>();
 		this.open.add(this.first);
@@ -81,7 +82,7 @@ public class Astar {
 			// for all y E successeurs(x)
 			for(BlockWorld y : current.next()) {
 				// if(y n'appartient pas aux fermes) ET (y n'appartient pas aux ouverts)
-				boolean isOpen=false, isClosed=false, isAdvice=false;
+				boolean isOpen=false, isClosed=false;
 				for(int i=0; i<this.open.size(); i++) {
 					if(y.isEqualTo(this.open.get(i))) { isOpen = true; break; }
 				}
@@ -91,8 +92,6 @@ public class Astar {
 				if(!isClosed && !isOpen) {
 					this.open.add(y);
 					distance.add(new Integer(currentDistance+1));
-					this.nodesVisited++;
-					this.totalNodes++;
 				}
 			}
 		}

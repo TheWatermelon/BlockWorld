@@ -1,5 +1,11 @@
 package modele;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 public class Block {
      protected char value;
      

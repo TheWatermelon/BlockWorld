@@ -6,6 +6,12 @@ import java.io.*;
 
 import modele.Block;
 
+/**
+ * 
+ * @author Bastien CHAPUSOT, Taric GANDI
+ *
+ */
+
 public class BlockWorld {
 	protected ArrayList<Stack<Block>> table;
 	protected String change;
@@ -68,7 +74,6 @@ public class BlockWorld {
 	/** 
 	 * setHauteur : mutateur de la hauteur
 	 * @param h : la nouvelle hauteur
-	 * @return void
 	 */
 	public void setHauteur(int h) { this.hauteur = h; }
 
@@ -154,9 +159,9 @@ public class BlockWorld {
 	}
 
 	/**
-	 * up : renvoie le block au-deesus de celui passé en argument
+	 * up : renvoie le block au-deesus de celui passe en argument
 	 * @param block : le block au-dessous
-	 * @return le block au-dessus de celui passé en paramètre
+	 * @return le block au-dessus de celui passe en parametre
 	 */
 	public Block up(Block block) {
 		// Verifie que le block est sur la table
