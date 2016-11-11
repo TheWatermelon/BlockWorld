@@ -90,6 +90,32 @@ public class BlockWorld implements Comparable<BlockWorld> {
 		}
 		return false;
 	}
+	
+	public int indextotop(Block b){
+	    int result=0;
+		for(int h=0;h<this.getTable().size();h++){
+			
+				if(!this.getTable().get(h).isEmpty()){
+					for(int f=0;f<getTable().get(h).size();f++){
+					if(this.getTable().get(h).get(f).equals(b)){
+						result= this.getTable().get(h).size()-(this.getTable().get(h).indexOf(this.getTable().get(h).get(f))+1);
+						break;
+					}
+				}
+			}
+		
+		}
+		 
+		//moi=initial.getTable().get(j).get(g-1);
+		//System.out.print(moi.value);
+		
+		return result;
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * up : renvoie le block au-deesus de celui passé en argument
@@ -314,11 +340,10 @@ public class BlockWorld implements Comparable<BlockWorld> {
 
 	@Override
 	public int compareTo(BlockWorld o) {
-		// TODO Auto-generated method stub
-
-       
-        return this.incost<o.incost?1:0;
-	}
+		 
+		 return Integer.compare(this.incost,o.incost);
+		 
+      }
   
 	 
 }

@@ -42,37 +42,106 @@ public class Astar {
 	 * Algorithme de A*
 	 */
 	
-	
+	public int heuristics(BlockWorld initial,BlockWorld finale){
+		int finali = -1,compteur=0;
+		Block moi = null ;
+		
+			 for(int i=0;i<finale.getTable().size();i++){// Parcours du tableau des différentes piles du tableau final
+				 if(!finale.getTable().get(i).isEmpty()){
+				  for(int j=0;j<finale.getTable().size();j++){
+				       if(!initial.getTable().get(j).isEmpty()){
+					        if(finale.getTable().get(i).get(0)==initial.getTable().get(j).get(0)){
+					        	finali=0;
+						 for(int g=0;g<Math.max(finale.getTable().get(i).size(),initial.getTable().get(j).size());g++){
+							 if(g<Math.min(finale.getTable().get(i).size(),initial.getTable().get(j).size())){
+								if(finale.getTable().get(i).get(g)==initial.getTable().get(j).get(g)) {
+									compteur++;
+									if(compteur==Math.min(finale.getTable().get(i).size(),initial.getTable().get(j).size())){
+										
+										//finali+=initial.getTable().get(j).size()-(initial.getTable().get(j).indexOf(initial.getTable().get(j).get(g))+1);
+										if(compteur==initial.getTable().get(j).size()&&(initial.getTable().get(j).size()!=finale.getTable().get(i).size())){
+											if(initial.getTable().get(j).size()+1<finale.getTable().get(i).size()){
+											moi=finale.getTable().get(i).get(initial.getTable().get(j).size()+1);
+											finali+=finale.getTable().get(i).size()%initial.getTable().get(j).size();
+											System.out.print("l  "+moi.value);
+											}
+										}
+										
+									}	
+							 
+									
+								}else{
+									
+									//On s'assure qu'il reste des elements dans la pile finale
+								        if(g<finale.getTable().get(i).size()){
+								        	if(initial.getTable().get(j).get(initial.getTable().get(j).size()-1).equals(finale.getTable().get(i).get(g))){
+								        	finali+=5;	
+								        	}else{
+								        		
+								        	}
+								 moi=finale.getTable().get(i).get(g);
+											//System.out.print(initial.getTable().get(j).get(initial.getTable().get(j).size()-1).equals(finale.getTable().get(i).get(g)));
+								        }
+								 finali+=finale.getTable().get(i).size()%compteur;   
+						         finali+=initial.getTable().get(j).size()-(initial.getTable().get(j).indexOf(initial.getTable().get(j).get(g-1))+1);
+									
+										//	moi=initial.getTable().get(j).get(g-1);
+										//System.out.print(moi.value);
+										break;
+									 
+									
+									
+								}
+							 }
+						 }
+					 }
+				 }
+			   }
+			    
+			 }
+		  }
+			 if(compteur==0){
+				 for(Stack<Block> s:finale.getTable()){
+					 if(!s.isEmpty()){
+						 moi=s.get(0);
+						 break; 
+					 }
+				 }
+				
+			 } 
+			 
+           if(moi!=null){
+        	 finali+=initial.indextotop(moi);
+           }
+			return finali;
+			
+		}
 	public BlockWorld algogbegbe(BlockWorld initial,BlockWorld finale){
 	
 	//listouverts.add(initial);
 		openlist=new PriorityQueue<>();
+		PriorityQueue<BlockWorld> fo ;
 		
 		
 		for(BlockWorld bi:initial.next()){
-			bi.incost=this.hu(bi,finale)+h(bi,finale);
-			
-			if(!openlist.isEmpty()){
-			for(BlockWorld bu: openlist){
-				if(bi.isEqualTo(bu)){
-					if(bi.incost<bu.incost){
-						bu.incost=bi.incost;
-						System.out.print("lola");
-					}
-				}else{
-					System.out.print("lol");
-					openlist.add(bi);	
-				}
-				
-			}	
-		   } 
+	       bi.incost+=this.heuristics(bi, finale);
+	       openlist.add(bi);
 		} 
-		while(!openlist.isEmpty()&&(openlist.peek().incost!=-1)){
-			algogbegbe(openlist.poll(), finale);
-		}
 		
-
-		return openlist.peek();
+		BlockWorld b=openlist.poll();
+		while(!b.isEqualTo(finale)){
+			fo=new PriorityQueue<>();
+			for(BlockWorld bl:b.next()){
+				bl.incost+=this.heuristics(bl, finale);
+				fo.add(bl);
+			}
+			//b=new BlockWorld();
+			b=fo.poll();
+			System.out.print(b.incost);
+		}
+		 
+       
+		return b;
 		
 	}
 	public BlockWorld algorithm() {
@@ -97,6 +166,68 @@ public class Astar {
 				if(h(x, this.last)+currentDistance <= f) {
 					current = x;
 					f = h(x, this.last)+currentDistance;
+					//System.out.println("Comparaison currentDistance : "+currentDistance+" avec hauteur : "+x.getHauteur());
+					//conseil = current.getHauteur()<2?current:current.searchParent(1);
+					if(currentDistance<=2) {
+						conseil = current;
+					}
+				}
+			}
+			// if x est le noeud final
+			if(current.isEqualTo(this.last)) { return conseil; }
+			currentDistance = this.open.indexOf(current)==-1?0:distance.get(this.open.indexOf(current));
+			distance.remove(new Integer(currentDistance));
+			this.open.remove(current);
+			this.closed.add(current);
+			// for all y E successeurs(x)
+			for(BlockWorld y : current.next()) {
+				// if(y n'appartient pas aux fermes) ET (y n'appartient pas aux ouverts)
+				boolean isOpen=false, isClosed=false, isAdvice=false;
+				for(int i=0; i<this.open.size(); i++) {
+					if(y.isEqualTo(this.open.get(i))) { isOpen = true; break; }
+				}
+				for(int i=0; i<this.closed.size(); i++) {
+					if(y.isEqualTo(this.closed.get(i))) { isClosed = true; break; }
+				}
+				/*
+				for(int i=0; i<this.advices.size(); i++) {
+					if(y.isEqualTo(this.advices.get(i))) { isAdvice = true; break; }
+				}
+				*/
+				if(!isClosed && !isOpen) {
+					this.open.add(y);
+					//System.out.println("Deuxieme comparaison currentDistance : "+currentDistance+" avec hauteur : "+y.getHauteur());
+					distance.add(new Integer(currentDistance+1));
+				}
+			}
+		}
+		
+		// Sortie
+		return conseil;
+	}
+	
+	public BlockWorld algorithm1() {
+		// Initialisation
+		this.open = new ArrayList<BlockWorld>();
+		this.open.add(this.first);
+		this.closed = new ArrayList<BlockWorld>();
+		ArrayList<Integer> distance = new ArrayList<Integer>();
+		int currentDistance=0;
+		distance.add(new Integer(currentDistance));
+		int f = heuristics(this.first, this.last);
+		BlockWorld current = this.first;
+		BlockWorld conseil = current;
+		
+		// Traitement
+		while(this.open.size()!=0) {
+			// x <- arg min(xEO)(f(x))
+			f = 99;
+			current = this.open.get(0);
+			for(BlockWorld x : this.open) {
+				currentDistance = distance.get(this.open.indexOf(x));
+				if(heuristics(x, this.last)+currentDistance <= f) {
+					current = x;
+					f = heuristics(x, this.last)+currentDistance;
 					//System.out.println("Comparaison currentDistance : "+currentDistance+" avec hauteur : "+x.getHauteur());
 					//conseil = current.getHauteur()<2?current:current.searchParent(1);
 					if(currentDistance<=2) {
@@ -274,7 +405,7 @@ public class Astar {
 	public void run() {
 		BlockWorld current;
 		do {
-			current=algorithm();
+			current=algorithm1();
 			current.printTable();
 			System.out.println(current.getHauteur()+" "+current.getChange());
 			setFirst(current);
