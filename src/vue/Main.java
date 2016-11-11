@@ -63,11 +63,11 @@ public class Main {
 	
 		bo.printTable();
 		box.printTable();boi.printTable();
-	//su.algogbegbe(bo, box).printTable();
+//su.algogbegbe(bo, box).printTable();
 		//box.printTable();
 //System.out.print(su.heuristics(box, box));
 		
-	 su.run();
+	su.run();
 			
 			
 			//pox.poll().printTable();

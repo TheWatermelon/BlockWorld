@@ -20,7 +20,7 @@ public class BlockWorld implements Comparable<BlockWorld> {
 		parent=null;
 		change="do nothing";
 		hauteur=0;
-		incost=0;
+		incost=100;
 	}
 
 	/** getChange : connaitre le passe de l'etat
