@@ -10,7 +10,7 @@ public class Astar {
 	protected BlockWorld last;
 	public PriorityQueue<BlockWorld> openlist;
 	//PriorityQueue<BlockWorld> listouverts; 
-	
+	    
 	/**
 	 * Constructeur logique
 	 * @param init : l'etat initial
